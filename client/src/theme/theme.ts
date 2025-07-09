@@ -13,7 +13,7 @@ let theme = createTheme({
       xs: 0,
       sm: 600,
       md: 900,
-      lg: 1200,
+      lg: 1300,
       xl: 1536
     }
   },
@@ -74,14 +74,19 @@ let theme = createTheme({
       }
     },
     MuiContainer: {
+      defaultProps: {
+        maxWidth: 'lg'
+      },
       styleOverrides: {
         root: {
           paddingLeft: '1rem',
           paddingRight: '1rem',
-          '@media (min-width:600px)': {
-            paddingLeft: '2rem',
-            paddingRight: '2rem'
-          }
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          width: '100%'
+        },
+        maxWidthLg: {
+          maxWidth: '1300px'
         }
       }
     },

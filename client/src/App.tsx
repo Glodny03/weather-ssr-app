@@ -1,19 +1,20 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import { HomePage } from './pages/HomePage'
-import { CityPage } from './pages/CityPage'
-import { Container } from '@mui/material'
-import { SearchForm } from './components/SearchForm'
+import { Header } from './components/organisms/Header'
+import { Footer } from './components/organisms/Footer'
+import { HomePage } from './components/pages/HomePage'
+import { CityPage } from './components/pages/CityPage'
 
 const App = () => {
   return (
-    <Container>
-      <SearchForm />
+    <>
+      <Header />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/:city" element={<CityPage />} />
       </Routes>
-    </Container>
+      <Footer />
+    </>
   )
 }
 
