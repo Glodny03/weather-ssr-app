@@ -1,66 +1,51 @@
 import React from 'react'
-import { ChevronRight } from '@mui/icons-material'
-import { Box, Stack, SxProps, Theme, useMediaQuery, useTheme } from '@mui/material'
-import { Link } from 'react-router-dom'
-import { AppImage } from '../atoms/AppImage'
+import { Box } from '@mui/material'
 import { AppTypography } from '../atoms/AppTypography'
 
 export interface CityCardProps {
-  name: string
-  imageUrl: string
-  href: string
-  sx?: SxProps<Theme>
+  name: string // City name
+  imageUrl: string // Image shown on the card
+  href: string // URL to redirect when clicked
+  sx?: any // Optional custom styles
 }
 
 export const CityCard = ({ name, imageUrl, href, sx }: CityCardProps) => {
-  const theme = useTheme()
-  const isXs = useMediaQuery(theme.breakpoints.down('sm'))
-
   return (
     <Box
-      component={Link}
-      to={href}
+      component="a" // Make entire card a clickable link
+      href={href}
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
+        display: 'block',
         textDecoration: 'none',
-        border: '1px solid',
-        borderColor: theme.palette.grey[200],
-        borderRadius: 2,
+        borderRadius: '6px',
         overflow: 'hidden',
+        border: '1px solid #E0E0E0',
+        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+        '&:hover': {
+          transform: 'translateY(-4px)' // Slight lift on hover
+        },
         backgroundColor: 'background.paper',
-        height: '100%',
-        transition: 'transform 0.2s ease-in-out',
         ...sx
       }}
     >
+      {/* Image at the top */}
       <Box
+        component="img"
+        src={imageUrl}
+        alt={name}
         sx={{
-          overflow: 'hidden'
+          width: '100%',
+          height: 160,
+          objectFit: 'cover' // Ensure image fills the space nicely
         }}
-      >
-        <AppImage
-          src={imageUrl}
-          alt={name}
-          width="100%"
-          height={isXs ? 160 : 190}
-          objectFit="cover"
-          sx={{
-            transition: 'transform 0.3s ease',
-            '&:hover': {
-              transform: 'scale(1.05)'
-            }
-          }}
-        />
-      </Box>
+      />
 
-      <Stack direction="row" alignItems="center" justifyContent="space-between" px={2} py={2}>
+      {/* City name below the image */}
+      <Box sx={{ p: 2, textAlign: 'center' }}>
         <AppTypography variant="subtitle1" fontWeight={600} gutterBottom={false}>
           {name}
         </AppTypography>
-
-        <ChevronRight sx={{ color: 'text.secondary' }} />
-      </Stack>
+      </Box>
     </Box>
   )
 }
