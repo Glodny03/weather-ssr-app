@@ -3,14 +3,16 @@ import { Container, Grid, useMediaQuery, useTheme, SxProps, Theme } from '@mui/m
 import { AppImage } from '../atoms/AppImage'
 import { DailyForecastList, ForecastEntry } from '../molecules/DailyForecastList'
 import { CityOverview } from '../molecules/CityOverview'
+import { getWeatherImagePath } from '../../utils/weatherImageMapper'
 
+// Props for main weather display section
 interface CityWeatherSectionProps {
   city: string
   temperature: string
   wind: string
   humidity: string
   forecast: ForecastEntry[]
-  imageUrl: string
+  iconCode?: string
   imageAlt?: string
   sx?: SxProps<Theme>
 }
@@ -21,12 +23,12 @@ export const CityWeatherSection = ({
   wind,
   humidity,
   forecast,
-  imageUrl,
+  iconCode,
   imageAlt = 'Forecast visual',
   sx
 }: CityWeatherSectionProps) => {
   const theme = useTheme()
-  const isMdDown = useMediaQuery(theme.breakpoints.down('md'))
+  const isMdDown = useMediaQuery(theme.breakpoints.down('md')) // Check if mobile/tablet
 
   return (
     <Container
@@ -40,18 +42,21 @@ export const CityWeatherSection = ({
       }}
     >
       <Grid container spacing={4}>
+        {/* Left column: city name, temp, wind, humidity */}
         <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', justifyContent: 'center' }}>
           <CityOverview city={city} temperature={temperature} wind={wind} humidity={humidity} />
         </Grid>
 
+        {/* Middle column: 5-day forecast */}
         <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', justifyContent: 'center' }}>
           <DailyForecastList data={forecast} />
         </Grid>
 
-        {!isMdDown && (
+        {/* Right column: image only on desktop and above */}
+        {!isMdDown && iconCode && (
           <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', justifyContent: 'center' }}>
             <AppImage
-              src={imageUrl}
+              src={getWeatherImagePath(iconCode)} // Dynamic weather photo
               alt={imageAlt}
               sx={{
                 borderRadius: 2,
