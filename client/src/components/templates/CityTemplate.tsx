@@ -1,13 +1,36 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/weather/store/store'
 import { Box, Container } from '@mui/material'
-import { CityWeatherSection } from '../organisms/CityWeatherSection'
-import { getAssetUrl } from '../../utils/getAssetUrl'
 import { useTheme } from '@mui/material/styles'
+
+// Main city weather view
+import { CityWeatherSection } from '../organisms/CityWeatherSection'
+// Comparison table with other cities
 import { WeatherComparisonTable } from '../molecules/WeatherComparisonTable'
+// Error message section if city not found
+import { WeatherErrorSection } from '../organisms/WeatherErrorSection'
 
 export const CityTemplate = () => {
   const theme = useTheme()
 
+  // Get weather state from Redux
+  const weather = useSelector((state: RootState) => state.weather)
+
+  // Prepare forecast data for rendering
+  const forecast = weather.forecast.map((entry) => ({
+    day: entry.day,
+    description: entry.description,
+    temperature: `${entry.temperature}°`,
+    icon: `https://openweathermap.org/img/wn/${entry.icon}.png` // Weather icon from API
+  }))
+
+  // If error exists (e.g. wrong city), show error component
+  if (weather.error) {
+    return <WeatherErrorSection message={weather.error} />
+  }
+
+  // Main weather UI with city and forecast data
   return (
     <Box
       component="main"
@@ -19,54 +42,18 @@ export const CityTemplate = () => {
     >
       <Container maxWidth="lg">
         <CityWeatherSection
-          city="Warszawa"
-          temperature="08°"
-          wind="2.4km/h"
-          humidity="70%"
-          imageUrl={getAssetUrl('weather/cloud.webp')}
-          forecast={[
-            { day: 'Piątek', description: 'Pochmurnie', temperature: '08°' },
-            { day: 'Sobota', description: 'Pochmurnie', temperature: '12°' },
-            { day: 'Niedziela', description: 'Pochmurnie', temperature: '23°' },
-            { day: 'Poniedziałek', description: 'Pochmurnie', temperature: '08°' },
-            { day: 'Wtorek', description: 'Pochmurnie', temperature: '08°' },
-            { day: 'Środa', description: 'Pochmurnie', temperature: '08°' }
-          ]}
+          city={weather.city}
+          temperature={weather.temperature ? `${weather.temperature}°` : '--'}
+          wind={weather.windSpeed ? `${weather.windSpeed}km/h` : '--'}
+          humidity={weather.humidity ? `${weather.humidity}%` : '--'}
+          iconCode={weather.weatherIcon || '01d'}
+          forecast={forecast}
         />
       </Container>
 
+      {/* Weather comparison table for other cities */}
       <Container maxWidth="lg" sx={{ mt: 6 }}>
-        <WeatherComparisonTable
-          data={[
-            {
-              city: 'Kraków',
-              temperature: '20°C',
-              tempDiff: 'zimniej o 2°C',
-              humidity: '60%',
-              humidityDiff: 'wilgotniej o 5%',
-              wind: '15 km/h',
-              windDiff: 'silniejszy o 3 km/h'
-            },
-            {
-              city: 'Wrocław',
-              temperature: '23°C',
-              tempDiff: 'cieplej o 1°C',
-              humidity: '52%',
-              humidityDiff: 'suchszy o 3%',
-              wind: '10 km/h',
-              windDiff: 'słabszy o 2 km/h'
-            },
-            {
-              city: 'Gdańsk',
-              temperature: '19°C',
-              tempDiff: 'zimniej o 3°C',
-              humidity: '68%',
-              humidityDiff: 'wilgotniej o 13%',
-              wind: '17 km/h',
-              windDiff: 'silniejszy o 5 km/h'
-            }
-          ]}
-        />
+        {weather.comparison && <WeatherComparisonTable data={weather.comparison} />}
       </Container>
     </Box>
   )
