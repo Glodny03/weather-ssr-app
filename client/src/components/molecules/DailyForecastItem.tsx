@@ -7,10 +7,11 @@ interface DailyForecastItemProps {
   day: string
   description: string
   temperature: string
+  icon: string
   isActive?: boolean
 }
 
-export const DailyForecastItem = ({ day, description, temperature, isActive }: DailyForecastItemProps) => {
+export const DailyForecastItem = ({ day, description, temperature, icon, isActive }: DailyForecastItemProps) => {
   const theme = useTheme()
 
   return (
@@ -24,7 +25,7 @@ export const DailyForecastItem = ({ day, description, temperature, isActive }: D
         gap: 4
       }}
     >
-      <WeatherIcon />
+      <WeatherIcon iconCode={icon} alt={description} />
 
       <Box sx={{ flexGrow: 1 }}>
         <AppTypography variant="body1" sx={{ fontWeight: 600, m: 0 }}>

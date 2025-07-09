@@ -1,7 +1,12 @@
 import React from 'react'
 import { Box } from '@mui/material'
-import { getAssetUrl } from '../../utils/getAssetUrl'
 
-export const WeatherIcon = () => {
-  return <Box component="img" src={getAssetUrl('icons/rain.svg')} alt="Deszcz" sx={{ width: 32, height: 32 }} />
+interface WeatherIconProps {
+  iconCode: string
+  alt?: string
+  size?: number
+}
+
+export const WeatherIcon = ({ iconCode, alt = 'Pogoda', size = 52 }: WeatherIconProps) => {
+  return <Box component="img" src={iconCode} alt={alt} sx={{ width: size, height: size }} />
 }
